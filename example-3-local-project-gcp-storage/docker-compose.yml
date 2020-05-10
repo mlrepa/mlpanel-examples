@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+######################################################
+# PROJECT EXAMPLE CONTAINER
+######################################################
+  mlpanel-example-3:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: mlpanel/mlpanel-example-3-local-project:latest
+    network_mode: 'mlpanel_default'
+    env_file:
+      - .env
+    environment:
+      PYTHONPATH: '/home/mlpanel-example-3'
+      PROJECT_PATH: '/home/mlpanel-example-3'
+      LANG: 'C.UTF-8'
+      JUPYTER_ENABLE_LAB: 'yes'
+      GOOGLE_APPLICATION_CREDENTIALS: /home/dev/mlrepa/gcp-credentials.json
+    ports:
+      - 8888:8888
+    volumes:
+      - ./:/home/mlpanel-example-3
+      - $WORKSPACE:$WORKSPACE
+      - ./config/$GOOGLE_APPLICATION_CREDENTIALS_JSON:/home/dev/mlrepa/gcp-credentials.json

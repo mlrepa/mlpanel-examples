@@ -1,0 +1,54 @@
+base:
+  project: example-2-local-project-py
+  tags: [example-2, mlpanel]
+  MLFLOW_TRACKING_URI: http://mlpanel:5001
+
+  experiments:
+    name: example-2-experiment-1
+    experiments_folder: experiments
+    models_folder: experiments/models
+    model_name: model.joblib
+
+  random_state: 42 # random state for train/test split
+  loglevel: DEBUG
+
+
+dataset_build:
+  dataset_csv: data/raw/iris.csv
+  featured_dataset_csv: data/processed/dataset.csv
+  features_columns_range: ['sepal_length', 'petal_length_to_petal_width']
+  target_column: species
+
+
+split_train_test:
+  folder: experiments
+  train_csv: data/processed/train_dataset.csv
+  test_csv: data/processed/test_dataset.csv
+  test_size: 0.2
+
+
+train:
+  cv: 5
+  estimator_name: svm
+  estimators:
+
+    logreg: # sklearn.linear_model.LogisticRegression
+      param_grid: # params of GridSearchCV constructor
+        C: [0.001, 0.01, 0.1]
+        max_iter: [100]
+        solver: ['lbfgs']
+        multi_class: ['multinomial']
+
+    svm: # sklearn.svm.SVC
+      param_grid:
+        C: [0.1, 1.0]
+        kernel: ["rbf", "linear"]
+        gamma: ["scale"]
+        degree: [3, 5]
+
+
+evaluate:
+  metrics_report: metrics.json
+
+
+
